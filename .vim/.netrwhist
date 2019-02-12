@@ -1,7 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =5
-let g:netrw_dirhist_1='/home/karl/.oh-my-zsh'
-let g:netrw_dirhist_2='/mnt/c/projects/Analytics/project/.git'
-let g:netrw_dirhist_3='/mnt/c/projects/Misc/08-2018/image_diff/rs-imagediff/cv-rs'
-let g:netrw_dirhist_4='/home/karl/.oh-my-zsh/custom/themes/powerlevel9k'
-let g:netrw_dirhist_5='/home/karl/.oh-my-zsh'

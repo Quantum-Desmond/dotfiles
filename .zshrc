@@ -19,6 +19,10 @@ ZSH_THEME=""
 source ~/.cargo/env
 export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+
+export PATH=/home/karl/.local/bin:$PATH
+
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
 # cause zsh load theme from this variable instead of
@@ -138,21 +142,19 @@ alias gc="git commit -av"
 alias pruneold="git remote prune origin"
 
 alias push="git push"
+alias pull="git pull --all"
+
+alias python="python3"
 
 # emacs alias
-alias emacs="emacs25"
+# alias emacs="emacs25"
 
 # use python3 instead of python
-alias python="python3"
-alias python3="python3.6"
-alias pip="pip3"
-
 alias hyper="cmd.exe /c hyper"
+alias remacs="~/remacs/src/remacs &"
 
 source /home/karl/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /home/karl/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-bash ~/terminal_etc/screenget
 
 # load "pure" prompt
 autoload -U promptinit; promptinit
@@ -160,6 +162,7 @@ prompt pure
 
 # turn off beeping
 unsetopt beep
+unsetopt BG_NICE
 
 #Change ls colours
 LS_COLORS="ow=01;36;40" && export LS_COLORS
