@@ -64,6 +64,8 @@ HYPHEN_INSENSITIVE="true"
 plugins=(
   git
   python
+  zsh-autosuggestions
+  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -152,9 +154,6 @@ alias python="python3"
 # use python3 instead of python
 alias hyper="cmd.exe /c hyper"
 alias remacs="~/remacs/src/remacs &"
-
-source /home/karl/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /home/karl/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # load "pure" prompt
 autoload -U promptinit; promptinit
