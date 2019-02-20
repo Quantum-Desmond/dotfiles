@@ -130,7 +130,7 @@ alias sl="ls"
 
 alias zshconfig="vim ~/.zshrc"
 alias reload="source ~/.zshrc"
-alias home="cd /mnt/c/Users/Karl/"
+alias home="cd /mnt/c/Users/KarlMcCarron/"
 alias projects="cd /mnt/c/projects/"
 
 # git aliases

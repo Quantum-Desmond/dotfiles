@@ -359,6 +359,14 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; set link to browser if on WSL
+  (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+        (cmd-args '("/c" "start")))
+    (when (file-exists-p cmd-exe)
+      (setq browse-url-generic-program  cmd-exe
+            browse-url-generic-args     cmd-args
+            browse-url-browser-function 'browse-url-generic)))
+
   (setq evil-escape-key-sequence "jk")
   ;; Adding setting so that underscore counts in word motions
   (add-hook 'prog-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
@@ -375,6 +383,9 @@ you should place your code here."
 
   ;; (setq flycheck-gcc-language-standard . "c++14")
   ;; (setq flycheck-clang-language-standard . "c++14")
+
+  ;; org mode settings
+  (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; flycheck settings
   (setq python-shell-interpreter "/usr/bin/python3")
