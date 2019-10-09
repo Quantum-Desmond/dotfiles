@@ -51,13 +51,17 @@ values."
      javascript
      (python :variables
              python-backend 'lsp
-             python-test-runner 'nose)
+             python-lsp-server 'mspyls
+             python-lsp-git-root "~/tools/python/python-language-server"
+             python-test-runner 'pytest)
      ruby
      rust
 
      latex
      vimscript
      windows-scripts
+     yaml
+     ycmd
 
      syntax-checking
      auto-completion
@@ -68,7 +72,6 @@ values."
      nginx
 
      git
-     lsp
 
      games
 
@@ -87,9 +90,6 @@ values."
    dotspacemacs-additional-packages
    '(
      base16-theme
-     nodejs-repl
-     org-redmine
-     yasnippet-snippets
      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -181,8 +181,8 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+   dotspacemacs-default-font '("Fira Code"
+                                :size 13
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -329,7 +329,7 @@ values."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
@@ -350,6 +350,7 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   ;; (setq tramp-default-method "plink")
+  (add-to-list 'exec-path "/usr/local/bin")
   )
 
 (defun dotspacemacs/user-config ()
@@ -381,8 +382,7 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'js2-mode "n'" 'nodejs-repl-switch-to-repl)
   (spacemacs/set-leader-keys-for-major-mode 'js2-mode "ns" 'nodejs-repl-switch-to-repl)
 
-  ;; (setq flycheck-gcc-language-standard . "c++14")
-  ;; (setq flycheck-clang-language-standard . "c++14")
+  (evil-leader/set-key "/" 'spacemacs/helm-project-do-ag)
 
   ;; org mode settings
   (setq org-highlight-latex-and-related '(latex script entities))
@@ -406,6 +406,47 @@ you should place your code here."
 
    )
 
+;; Font Ligatures
+  (defun my-correct-symbol-bounds (pretty-alist)
+      "Prepend a TAB character to each symbol in this alist,
+  this way compose-region called by prettify-symbols-mode
+  will use the correct width of the symbols
+  instead of the width measured by char-width."
+      (mapcar (lambda (el)
+                (setcdr el (string ?\t (cdr el)))
+                el)
+              pretty-alist))
+  (defun my-ligature-list (ligatures codepoint-start)
+      "Create an alist of strings to replace with
+  codepoints starting from codepoint-start."
+      (let ((codepoints (-iterate '1+ codepoint-start (length ligatures))))
+        (-zip-pair ligatures codepoints)))
+  (setq my-fira-code-ligatures
+      (let* ((ligs '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\"
+                    "{-" "[]" "::" ":::" ":=" "!!" "!=" "!==" "-}"
+                    "--" "---" "-->" "->" "->>" "-<" "-<<" "-~"
+                    "#{" "#[" "##" "###" "####" "#(" "#?" "#_" "#_("
+                    ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*"
+                    "/**" "/=" "/==" "/>" "//" "///" "&&" "||" "||="
+                    "|=" "|>" "^=" "$>" "++" "+++" "+>" "=:=" "=="
+                    "===" "==>" "=>" "=>>" "<=" "=<<" "=/=" ">-" ">="
+                    ">=>" ">>" ">>-" ">>=" ">>>" "<*" "<*>" "<|" "<|>"
+                    "<$" "<$>" "<!--" "<-" "<--" "<->" "<+" "<+>" "<="
+                    "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<" "<~"
+                    "<~~" "</" "</>" "~@" "~-" "~=" "~>" "~~" "~~>" "%%"
+                    "x" ":" "+" "+" "*")))
+        (my-correct-symbol-bounds (my-ligature-list ligs #Xe100))))
+  (defun my-set-fira-code-ligatures ()
+      "Add fira code ligatures for use with prettify-symbols-mode."
+      (setq prettify-symbols-alist
+            (append my-fira-code-ligatures prettify-symbols-alist))
+      (prettify-symbols-mode))
+  (add-hook 'prog-mode-hook 'my-set-fira-code-ligatures)
+
+
+  ;; org-mode settings
+  (setq-default org-display-custom-times t)
+  (setq org-time-stamp-custom-formats '("<%a %d/%m/%Y>" . "<%a %d/%m/%Y - %H:%M>"))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -415,10 +456,11 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(helm-ag-base-command "rg --vimgrep --no-heading --smart-case")
  '(evil-want-Y-yank-to-eol t)
  '(package-selected-packages
    (quote
-    (atom-dark-theme-theme base16-monokai-dark-theme org-redmine base16-theme nodejs-repl sql-indent vimrc-mode dactyl-mode xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help nginx-mode dockerfile-mode docker docker-tramp powershell yasnippet-snippets org-projectile org-category-capture org-present org-pomodoro org-mime org-download gnuplot helm-company helm-c-yasnippet fuzzy company-web web-completion-data company-tern company-statistics company-c-headers company-auctex company-anaconda company auto-yasnippet ac-ispell auto-complete yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic web-mode web-beautify vagrant-tramp vagrant toml-mode tern tagedit smeargle slim-mode slack emojify circe oauth2 websocket ht scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer pos-tip pug-mode orgit org-ref pdf-tools key-chord ivy htmlize tablist mmm-mode minitest markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc helm-gitignore helm-css-scss helm-bibtex parsebib haml-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub let-alist with-editor emmet-mode disaster coffee-mode cmake-mode clang-format chruby cargo rust-mode bundler inf-ruby biblio biblio-core auctex-latexmk auctex alert log4e gntp ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (flycheck-ycmd company-ycmd ycmd request-deferred deferred yaml-mode typit mmt tide typescript-mode sudoku pacmacs omnisharp lv flycheck-rust flycheck-pos-tip flycheck transient csharp-mode company-emacs-eclim eclim 2048-game atom-dark-theme-theme base16-monokai-dark-theme org-redmine base16-theme nodejs-repl sql-indent vimrc-mode dactyl-mode xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help nginx-mode dockerfile-mode docker docker-tramp powershell yasnippet-snippets org-projectile org-category-capture org-present org-pomodoro org-mime org-download gnuplot helm-company helm-c-yasnippet fuzzy company-web web-completion-data company-tern company-statistics company-c-headers company-auctex company-anaconda company auto-yasnippet ac-ispell auto-complete yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic web-mode web-beautify vagrant-tramp vagrant toml-mode tern tagedit smeargle slim-mode slack emojify circe oauth2 websocket ht scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer pos-tip pug-mode orgit org-ref pdf-tools key-chord ivy htmlize tablist mmm-mode minitest markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc helm-gitignore helm-css-scss helm-bibtex parsebib haml-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub let-alist with-editor emmet-mode disaster coffee-mode cmake-mode clang-format chruby cargo rust-mode bundler inf-ruby biblio biblio-core auctex-latexmk auctex alert log4e gntp ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

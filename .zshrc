@@ -64,6 +64,7 @@ HYPHEN_INSENSITIVE="true"
 plugins=(
   git
   python
+  ripgrep
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
