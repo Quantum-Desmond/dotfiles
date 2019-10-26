@@ -54,8 +54,9 @@ values."
      javascript
      (python :variables
              python-backend 'lsp
-             python-lsp-server 'mspyls
-             python-lsp-git-root "~/tools/python/python-language-server"
+             python-fill-column 100
+             ;; python-lsp-server 'mspyls
+             ;; python-lsp-git-root "~/tools/python/python-language-server"
              python-test-runner 'pytest)
      ruby
      rust
@@ -68,6 +69,8 @@ values."
 
      syntax-checking
      auto-completion
+
+     lsp
 
      vagrant
      docker
@@ -311,7 +314,14 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers '(:relative nil
+                               :disabled-for-modes dired-mode
+                                                   doc-view-mode
+                                                   markdown-mode
+                                                   org-mode
+                                                   pdf-view-mode
+                                                   text-mode
+                               :size-limit-kb 1000)
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -412,6 +422,7 @@ you should place your code here."
   ;; org-mode settings
   (setq-default org-display-custom-times t)
   (setq org-time-stamp-custom-formats '("<%a %d/%m/%Y>" . "<%a %d/%m/%Y - %H:%M>"))
+  (setq x-select-enable-clipboard nil)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

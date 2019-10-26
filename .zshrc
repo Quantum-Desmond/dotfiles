@@ -7,6 +7,7 @@ export TERM="xterm-256color"
 export ZSH=/home/karl/.oh-my-zsh
 
 export DEFAULT_USER="$USER"
+export LIBGL_ALWAYS_INDIRECT=1
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
