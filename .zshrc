@@ -22,6 +22,7 @@ export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 
 export PATH=/home/karl/.local/bin:$PATH
+export PATH=/home/karl/.cabal/bin:$PATH
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -157,6 +158,7 @@ alias hyper="cmd.exe /c hyper"
 alias remacs="~/remacs/src/remacs &"
 
 # load "pure" prompt
+fpath+=("$HOME/.zsh/pure")
 autoload -U promptinit; promptinit
 prompt pure
 
