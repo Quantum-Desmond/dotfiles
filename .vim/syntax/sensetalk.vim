@@ -15,7 +15,7 @@ syn region senseString start=+"+ end=+"+
 syn case ignore
 
 syn keyword senseStatement run
-syn keyword senseStatement if then end
+syn keyword senseStatement if then end repeat by
 syn keyword senseStatement put insert into before after set to
 
 syn keyword senseStatement connect log

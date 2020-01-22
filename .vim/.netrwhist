@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_cnt =5
 let g:netrw_dirhist_1='/home/karl/.config/onedrive'
 let g:netrw_dirhist_2='/home/karl/OneDrive/projects/vslt_to_epp/epp_example_export/project/scripts'
 let g:netrw_dirhist_3='/home/karl/OneDrive/projects/vslt_to_epp/vslt_to_cs/tstrs/project/scripts'
+let g:netrw_dirhist_4='/home/karl/OneDrive/projects/testcase_visualizer/aub-ui-monorepo/packages/model-list'
+let g:netrw_dirhist_5='/home/karl/OneDrive/projects/testcase_visualizer/flask-server/app/templates'

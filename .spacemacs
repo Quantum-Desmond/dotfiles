@@ -43,7 +43,8 @@ values."
      csharp
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode)
-     html
+     (html :variables
+           web-fmt-tool 'web-beautify)
 
      (java :variables
            meghanada-javac-xlint "-Xlint:all,-processing")
@@ -58,11 +59,12 @@ values."
      ruby
      rust
 
+     react
+
      latex
      vimscript
      windows-scripts
      yaml
-     ycmd
 
      syntax-checking
      auto-completion
@@ -93,6 +95,7 @@ values."
    dotspacemacs-additional-packages
    '(
      base16-theme
+     smart-tabs-mode
      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -378,13 +381,15 @@ you should place your code here."
             browse-url-generic-args     cmd-args
             browse-url-browser-function 'browse-url-generic)))
 
+  ;; map 'jk' to leave insert mode
   (setq evil-escape-key-sequence "jk")
+
   ;; Adding setting so that underscore counts in word motions
   (add-hook 'prog-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
-
   (modify-syntax-entry ?_ "w")
 
+  ;; Javascript key additions
   (spacemacs/set-leader-keys-for-major-mode 'js2-mode "ne" 'nodejs-repl-send-last-expression)
   (spacemacs/set-leader-keys-for-major-mode 'js2-mode "nj" 'nodejs-repl-send-line)
   (spacemacs/set-leader-keys-for-major-mode 'js2-mode "nr" 'nodejs-repl-send-region)
@@ -392,6 +397,7 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'js2-mode "n'" 'nodejs-repl-switch-to-repl)
   (spacemacs/set-leader-keys-for-major-mode 'js2-mode "ns" 'nodejs-repl-switch-to-repl)
 
+  ;; tell Spacemacs to use rg as search
   (evil-leader/set-key "/" 'spacemacs/helm-project-do-ag)
 
   ;; org mode settings
@@ -399,10 +405,28 @@ you should place your code here."
 
   ;; flycheck settings
   (setq python-shell-interpreter "/usr/bin/python3")
+  (setq-default flycheck-flake8-maximum-line-length 100)
   (defvaralias 'flycheck-python-pylint-executable 'python-shell-interpreter)
 
+  ;; use tabs of width 4 instead of 4 spaces
+  (setq-default indent-tabs-mode nil)
+  (setq-default smart-tabs-mode t)
+  (setq-default tab-width 4)
+  (defvaralias 'c-basic-offset 'tab-width)
+
+  ;; python smart tab settings
+  (smart-tabs-advice python-indent-line-1 python-indent)
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (setq indent-tabs-mode t)
+              (setq tab-width (default-value 'tab-width))))
+
+  (smart-tabs-advice py-indent-line py-indent-offset)
+  (smart-tabs-advice py-newline-and-indent py-indent-offset)
+  (smart-tabs-advice py-indent-region py-indent-offset)
+
+  ;; omnisharp settings
   (setq omnisharp-server-executable-path "/usr/local/bin/omnisharp/run")
-  (setq-default flycheck-flake8-maximum-line-length 100)
 
   ;; Java settings
   (setq eclim-eclipse-dirs '("/opt/eclipse")
@@ -457,7 +481,8 @@ you should place your code here."
   ;; org-mode settings
   (setq-default org-display-custom-times t)
   (setq org-time-stamp-custom-formats '("<%a %d/%m/%Y>" . "<%a %d/%m/%Y - %H:%M>"))
-  (setq x-select-enable-clipboard nil)
+
+  ;; (setq x-select-enable-clipboard nil)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -489,8 +514,10 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol t)
+ '(helm-ag-base-command "rg --vimgrep --no-heading --smart-case")
  '(package-selected-packages
-   '(lsp-ui lsp-java cquery company-lsp ccls lsp-mode atom-dark-theme-theme base16-monokai-dark-theme org-redmine base16-theme nodejs-repl sql-indent vimrc-mode dactyl-mode xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help nginx-mode dockerfile-mode docker docker-tramp powershell yasnippet-snippets org-projectile org-category-capture org-present org-pomodoro org-mime org-download gnuplot helm-company helm-c-yasnippet fuzzy company-web web-completion-data company-tern company-statistics company-c-headers company-auctex company-anaconda company auto-yasnippet ac-ispell auto-complete yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic web-mode web-beautify vagrant-tramp vagrant toml-mode tern tagedit smeargle slim-mode slack emojify circe oauth2 websocket ht scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer pos-tip pug-mode orgit org-ref pdf-tools key-chord ivy htmlize tablist mmm-mode minitest markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc helm-gitignore helm-css-scss helm-bibtex parsebib haml-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub let-alist with-editor emmet-mode disaster coffee-mode cmake-mode clang-format chruby cargo rust-mode bundler inf-ruby biblio biblio-core auctex-latexmk auctex alert log4e gntp ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+   (quote
+    (smart-tabs-mode flycheck-ycmd company-ycmd ycmd request-deferred deferred yaml-mode typit mmt tide typescript-mode sudoku pacmacs omnisharp lv flycheck-rust flycheck-pos-tip flycheck transient csharp-mode company-emacs-eclim eclim 2048-game atom-dark-theme-theme base16-monokai-dark-theme org-redmine base16-theme nodejs-repl sql-indent vimrc-mode dactyl-mode xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help nginx-mode dockerfile-mode docker docker-tramp powershell yasnippet-snippets org-projectile org-category-capture org-present org-pomodoro org-mime org-download gnuplot helm-company helm-c-yasnippet fuzzy company-web web-completion-data company-tern company-statistics company-c-headers company-auctex company-anaconda company auto-yasnippet ac-ispell auto-complete yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic web-mode web-beautify vagrant-tramp vagrant toml-mode tern tagedit smeargle slim-mode slack emojify circe oauth2 websocket ht scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake racer pos-tip pug-mode orgit org-ref pdf-tools key-chord ivy htmlize tablist mmm-mode minitest markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc helm-gitignore helm-css-scss helm-bibtex parsebib haml-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit ghub let-alist with-editor emmet-mode disaster coffee-mode cmake-mode clang-format chruby cargo rust-mode bundler inf-ruby biblio biblio-core auctex-latexmk auctex alert log4e gntp ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

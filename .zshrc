@@ -66,6 +66,7 @@ plugins=(
   git
   python
   ripgrep
+  shrink-path
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
@@ -73,7 +74,7 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 # set so Linux knows where the display is
-export DISPLAY=:0
+# export DISPLAY=:0
 
 # Python virtualenvrapper settings
 export WORKON_HOME=~/.envs
@@ -128,7 +129,8 @@ export EDITOR=$VISUAL
 
 alias c="cd /mnt/c/"
 
-alias sl="ls"
+alias sl="exa"
+alias l="exa -lah --git"
 
 alias zshconfig="vim ~/.zshrc"
 alias reload="source ~/.zshrc"
@@ -165,8 +167,14 @@ prompt pure
 unsetopt beep
 unsetopt BG_NICE
 
+# compress directory path
+# setopt prompt_subst
+# PS1='%n@%m $(shrink_path -f)> '
+
 #Change ls colours
 LS_COLORS="ow=01;36;40" && export LS_COLORS
+
+alias ls="exa"
 
 #make cd use the ls colours
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
