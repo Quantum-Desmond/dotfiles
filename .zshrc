@@ -67,6 +67,7 @@ plugins=(
   git
   python
   ripgrep
+  shrink-path
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
@@ -129,7 +130,8 @@ export EDITOR=$VISUAL
 
 alias c="cd /mnt/c/"
 
-alias sl="ls"
+alias sl="exa"
+alias l="exa -lah --git"
 
 alias zshconfig="vim ~/.zshrc"
 alias reload="source ~/.zshrc"
@@ -167,6 +169,10 @@ prompt pure
 # turn off beeping
 unsetopt beep
 unsetopt BG_NICE
+
+# compress directory path
+# setopt prompt_subst
+# PS1='%n@%m $(shrink_path -f)> '
 
 #Change ls colours
 LS_COLORS="ow=01;36;40" && export LS_COLORS
