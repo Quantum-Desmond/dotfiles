@@ -74,7 +74,7 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 # set so Linux knows where the display is
-export DISPLAY=:0
+# export DISPLAY=:0
 
 # Python virtualenvrapper settings
 export WORKON_HOME=~/.envs
@@ -150,6 +150,7 @@ alias push="git push"
 alias pull="git pull --all"
 
 alias python="python3"
+alias pip="pip3"
 
 # emacs alias
 # alias emacs="emacs25"
@@ -169,6 +170,9 @@ unsetopt BG_NICE
 
 #Change ls colours
 LS_COLORS="ow=01;36;40" && export LS_COLORS
+
+alias ls="exa"
+alias l="exa -lah --git"
 
 #make cd use the ls colours
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
