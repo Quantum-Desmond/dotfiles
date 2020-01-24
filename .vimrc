@@ -1,8 +1,9 @@
 syntax enable " enable syntax processing
 
+set shiftwidth=4 " # of visual spaces per TAB
 set tabstop=4 " # of visual spaces per TAB
 set softtabstop=4 " # of spaces in tab when editing
-set expandtab " tabs are spaces
+" set expandtab " tabs are spaces
 set showcmd
 set autoindent
 set visualbell
