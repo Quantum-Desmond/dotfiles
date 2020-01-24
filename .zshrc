@@ -152,6 +152,7 @@ alias push="git push"
 alias pull="git pull --all"
 
 alias python="python3"
+alias pip="pip3"
 
 # emacs alias
 # alias emacs="emacs25"
@@ -177,6 +178,7 @@ unsetopt BG_NICE
 LS_COLORS="ow=01;36;40" && export LS_COLORS
 
 alias ls="exa"
+alias l="exa -lah --git"
 
 #make cd use the ls colours
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
