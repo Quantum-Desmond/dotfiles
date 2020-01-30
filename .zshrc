@@ -180,6 +180,8 @@ LS_COLORS="ow=01;36;40" && export LS_COLORS
 alias ls="exa"
 alias l="exa -lah --git"
 
+alias vim="nvim"
+
 #make cd use the ls colours
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 autoload -Uz compinit
