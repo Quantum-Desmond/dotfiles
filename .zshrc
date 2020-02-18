@@ -68,6 +68,7 @@ plugins=(
   python
   ripgrep
   shrink-path
+  zsh-interactive-cd
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
@@ -106,6 +107,9 @@ bindkey -M vicmd "j" down-line-or-beginning-search
 
 export VISUAL='vim'
 export EDITOR=$VISUAL
+
+# Import fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -178,6 +182,7 @@ unsetopt BG_NICE
 LS_COLORS="ow=01;36;40" && export LS_COLORS
 
 alias ls="exa"
+alias ll="exa -lh --git"
 alias l="exa -lah --git"
 
 alias vim="nvim"
@@ -186,3 +191,4 @@ alias vim="nvim"
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 autoload -Uz compinit
 compinit
+
