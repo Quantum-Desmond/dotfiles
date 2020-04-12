@@ -64,6 +64,7 @@ HYPHEN_INSENSITIVE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+  emacs
   git
   python
   ripgrep
@@ -156,7 +157,7 @@ alias push="git push"
 alias pull="git pull --all"
 
 alias python="python3"
-alias pip="pip3"
+# alias pip="python -m pip"
 
 # emacs alias
 # alias emacs="emacs25"
