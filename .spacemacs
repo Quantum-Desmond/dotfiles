@@ -76,7 +76,7 @@ This function should only modify configuration layer settings."
      syntax-checking
      auto-completion
 
-     lsp
+     (lsp :variables lsp-rust-server 'rust-analyzer)
 
      vagrant
      docker
@@ -263,7 +263,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Fira Code"
-                               :size 10.0
+                               :size 9
                                :weight normal
                                :width normal)
 
@@ -560,52 +560,15 @@ before packages are loaded."
   (defvaralias 'c-basic-offset 'tab-width)
 
   ;; python smart tab settings
-  (smart-tabs-advice python-indent-line-1 python-indent)
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (setq indent-tabs-mode t)
-              (setq tab-width (default-value 'tab-width))))
+  ;; (smart-tabs-advice python-indent-line-1 python-indent)
+  ;; (add-hook 'python-mode-hook
+  ;;           (lambda ()
+  ;;             (setq indent-tabs-mode t)
+  ;;             (setq tab-width (default-value 'tab-width))))
 
-  (smart-tabs-advice py-indent-line py-indent-offset)
-  (smart-tabs-advice py-newline-and-indent py-indent-offset)
-  (smart-tabs-advice py-indent-region py-indent-offset)
-
-  ;; Font Ligatures
-  (defun my-correct-symbol-bounds (pretty-alist)
-      "Prepend a TAB character to each symbol in this alist,
-  this way compose-region called by prettify-symbols-mode
-  will use the correct width of the symbols
-  instead of the width measured by char-width."
-      (mapcar (lambda (el)
-                (setcdr el (string ?\t (cdr el)))
-                el)
-              pretty-alist))
-  (defun my-ligature-list (ligatures codepoint-start)
-      "Create an alist of strings to replace with
-  codepoints starting from codepoint-start."
-      (let ((codepoints (-iterate '1+ codepoint-start (length ligatures))))
-        (-zip-pair ligatures codepoints)))
-  (setq my-fira-code-ligatures
-      (let* ((ligs '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\"
-                    "{-" "[]" "::" ":::" ":=" "!!" "!=" "!==" "-}"
-                    "--" "---" "-->" "->" "->>" "-<" "-<<" "-~"
-                    "#{" "#[" "##" "###" "####" "#(" "#?" "#_" "#_("
-                    ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*"
-                    "/**" "/=" "/==" "/>" "//" "///" "&&" "||" "||="
-                    "|=" "|>" "^=" "$>" "++" "+++" "+>" "=:=" "=="
-                    "===" "==>" "=>" "=>>" "<=" "=<<" "=/=" ">-" ">="
-                    ">=>" ">>" ">>-" ">>=" ">>>" "<*" "<*>" "<|" "<|>"
-                    "<$" "<$>" "<!--" "<-" "<--" "<->" "<+" "<+>" "<="
-                    "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<" "<~"
-                    "<~~" "</" "</>" "~@" "~-" "~=" "~>" "~~" "~~>" "%%"
-                    "x" ":" "+" "+" "*")))
-        (my-correct-symbol-bounds (my-ligature-list ligs #Xe100))))
-  (defun my-set-fira-code-ligatures ()
-      "Add fira code ligatures for use with prettify-symbols-mode."
-      (setq prettify-symbols-alist
-            (append my-fira-code-ligatures prettify-symbols-alist))
-      (prettify-symbols-mode))
-  (add-hook 'prog-mode-hook 'my-set-fira-code-ligatures)
+  ;; (smart-tabs-advice py-indent-line py-indent-offset)
+  ;; (smart-tabs-advice py-newline-and-indent py-indent-offset)
+  ;; (smart-tabs-advice py-indent-region py-indent-offset)
 
   )
 

@@ -4,7 +4,10 @@
 call plug#begin()
 
 " syntax highlighting
-Plug 'rust-lang/rust.vim'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 Plug 'tikhomirov/vim-glsl'
 
 " auto complete
@@ -132,12 +135,25 @@ let g:ycm_filetype_specific_completion_to_disable = {
     \ 'gitcommit': 1,
     \ 'python': 1
     \}
-let g:ycm_rust_src_path='/home/karl/workspace/rust/src/'
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
 let g:ycm_use_ultisnips_completer = 1 " Default 1, just ensure
 let g:ycm_seed_identifiers_with_syntax = 1 " Completion for programming language's
 
+" }}}
+
+
+" LanguageClient_neovim {{{
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rust-analyzer'],
+    \ }
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+"
+" Or map each action separately
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 " }}}
 
 " Flake8 {{{
@@ -167,4 +183,7 @@ augroup END
 
 " SenseTalk filetype
 autocmd BufRead,BufNewFile *.script set filetype=sensetalk
+
+autocmd FileType python setlocal tabstop=4
+autocmd FileType rust setlocal tabstop=4
 " }}} Filetypes

@@ -18,6 +18,8 @@ syn keyword senseStatement run
 syn keyword senseStatement if then end repeat by
 syn keyword senseStatement put insert into before after set to
 
+syn keyword senseStatement Click TypeText
+
 syn keyword senseStatement connect log
 syn keyword senseStatement wait waitfor
 
