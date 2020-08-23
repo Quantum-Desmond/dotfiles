@@ -84,7 +84,7 @@ source $ZSH/oh-my-zsh.sh
 export WORKON_HOME=~/.envs
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
-source /usr/local/bin/virtualenvwrapper.sh
+source $HOME/.local/bin/virtualenvwrapper.sh
 
 # import dir_colors
 if [ -f ~/.dir_colors ]; then
@@ -158,6 +158,7 @@ alias push="git push"
 alias pull="git pull --all"
 
 alias python="python3"
+alias pip="pip3"
 # alias pip="python -m pip"
 
 # emacs alias
