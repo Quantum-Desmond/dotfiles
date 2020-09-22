@@ -76,7 +76,7 @@ This function should only modify configuration layer settings."
      syntax-checking
      auto-completion
 
-     lsp
+     (lsp :variables lsp-rust-server 'rust-analyzer)
 
      vagrant
      docker
@@ -263,7 +263,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Fira Code"
-                               :size 10.0
+                               :size 9
                                :weight normal
                                :width normal)
 
@@ -560,16 +560,15 @@ before packages are loaded."
   (defvaralias 'c-basic-offset 'tab-width)
 
   ;; python smart tab settings
-  (smart-tabs-advice python-indent-line-1 python-indent)
-  (add-hook 'python-mode-hook
-            (lambda ()
-              (setq indent-tabs-mode t)
-              (setq tab-width (default-value 'tab-width))))
+  ;; (smart-tabs-advice python-indent-line-1 python-indent)
+  ;; (add-hook 'python-mode-hook
+  ;;           (lambda ()
+  ;;             (setq indent-tabs-mode t)
+  ;;             (setq tab-width (default-value 'tab-width))))
 
-  (smart-tabs-advice py-indent-line py-indent-offset)
-  (smart-tabs-advice py-newline-and-indent py-indent-offset)
-  (smart-tabs-advice py-indent-region py-indent-offset)
-
+  ;; (smart-tabs-advice py-indent-line py-indent-offset)
+  ;; (smart-tabs-advice py-newline-and-indent py-indent-offset)
+  ;; (smart-tabs-advice py-indent-region py-indent-offset)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
