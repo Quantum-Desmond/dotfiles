@@ -562,10 +562,16 @@ before packages are loaded."
   (setq-default tab-width 4)
   (defvaralias 'c-basic-offset 'tab-width)
 
-  (ido-mode -1)
-
   ;; python smart tab settings
-  ;; (add-hook 'python-mode-hook (lambda () (setq indent-tabs-mode t)))
+  ;; (smart-tabs-advice python-indent-line-1 python-indent)
+  ;; (add-hook 'python-mode-hook
+  ;;           (lambda ()
+  ;;             (setq indent-tabs-mode t)
+  ;;             (setq tab-width (default-value 'tab-width))))
+
+  ;; (smart-tabs-advice py-indent-line py-indent-offset)
+  ;; (smart-tabs-advice py-newline-and-indent py-indent-offset)
+  ;; (smart-tabs-advice py-indent-region py-indent-offset)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
