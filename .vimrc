@@ -5,6 +5,7 @@ call plug#begin()
 
 " syntax highlighting
 Plug 'rust-lang/rust.vim'
+Plug 'vim-scripts/indentpython.vim'
 Plug 'tikhomirov/vim-glsl'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
@@ -58,12 +59,14 @@ set background=dark
 " }}} Colours
 
 " Spaces & Indentation {{{
-set tabstop=4      " number of viual spaces per TAB
-set softtabstop=4  " number of spaces in tab when editing
-set shiftwidth=4   " number of spaces to use for autoindent
+set smartindent    " Do smart autoindentin when starting a new line
+set shiftwidth=4   " Number of spaces per autoindentation
 set expandtab      " On pressing tab, insert 4 spaces
-set autoindent     " tabs are space
-set copyindent     " copy indentation from previous line
+
+set tabstop=4      " number of viual spaces per TAB
+set smarttab       " At <Tab> at beginning inserts spaces set in shiftwidth
+" set autoindent     " tabs are space
+" set copyindent     " copy indentation from previous line
 " }}} Spaces & Indentation
 
 " UI tweaks {{{
@@ -153,7 +156,7 @@ au BufEnter * if &buftype == 'terminal' | :startinsert | endif
 " open terminal on ctrl+n
 function! OpenTerminal()
     split term://zsh
-    resize 10
+    resize 8
 endfunction
 nnoremap <C-n> :call OpenTerminal()<CR>
 " }}} Terminal
@@ -192,7 +195,7 @@ let g:ycm_complete_in_strings = 1
 let g:ycm_use_ultisnips_completer = 1 " Default 1, just ensure
 let g:ycm_seed_identifiers_with_syntax = 1 " Completion for programming language's
 
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-python']
 
 " }}} Autocomplete
 
@@ -223,5 +226,14 @@ augroup END
 
 " SenseTalk filetype
 autocmd BufRead,BufNewFile *.script set filetype=sensetalk
+
+au BufNewFile,BufRead *.py
+    \ | set tabstop=4
+    \ | set softtabstop=4
+    \ | set shiftwidth=4
+    \ | set textwidth=99
+    \ | set expandtab
+    \ | set autoindent
+    \ | set fileformat=unix
 " }}} Filetypes
 

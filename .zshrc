@@ -92,6 +92,9 @@ if [ -f ~/.dir_colors ]; then
     eval `dircolors ~/.dir_colors`
 fi
 
+# Added so that fzf (fuzzy string matcher) uses ripgrep instead of ag
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden --follow --glob "!.git/*"'
+
 # Activate vi mode
 bindkey -v
 export KEYTIMEOUT=1
