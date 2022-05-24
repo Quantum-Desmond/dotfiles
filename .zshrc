@@ -25,6 +25,7 @@ export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 export PATH=/home/karl/.local/bin:$PATH
 export PATH=/home/karl/.cabal/bin:$PATH
 export PATH=$PATH:/snap/bin
+export PATH="$HOME/.poetry/bin:$PATH"
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -78,7 +79,8 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 # set so Linux knows where the display is
-# export DISPLAY=:0
+export WSL_HOST=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}')
+export DISPLAY="$WSL_HOST:0.0"
 
 # Python virtualenvrapper settings
 # export WORKON_HOME=~/.envs
@@ -159,8 +161,6 @@ alias pruneold="git remote prune origin"
 alias push="git push"
 alias pull="git pull --all"
 
-alias python="python3"
-alias pip="pip3"
 # alias pip="python -m pip"
 
 # emacs alias
@@ -224,3 +224,4 @@ conda_start () {
 # Setting prompt to Starship at end of script
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
+

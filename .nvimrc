@@ -4,47 +4,62 @@
 call plug#begin()
 
 " syntax highlighting
+Plug 'sheerun/vim-polyglot'
 Plug 'rust-lang/rust.vim'
 Plug 'vim-scripts/indentpython.vim'
 Plug 'tikhomirov/vim-glsl'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'OmniSharp/omnisharp-vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Plug 'nvim-orgmode/orgmode'  " org mode
 
 " auto complete
-Plug 'nvie/vim-flake8'
+Plug 'scrooloose/syntastic'
 
-" navigation/search file
+" Navigation/search file
+Plug 'dense-analysis/ale'  " ALE: async linting engine
 Plug 'ryanoasis/vim-devicons'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'rking/ag.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': { -> fzf#install() } } " fuzzy finder
+Plug 'junegunn/fzf.vim'                                              " Help with fzf<->vim
 Plug 'dkprice/vim-easygrep'
 
 " Colour themes
 Plug 'jacoborus/tender.vim'
 Plug 'frazrepo/vim-rainbow'
 Plug 'dracula/vim'
+Plug 'altercation/vim-colors-solarized'
 
-" notes
+" Misc
 Plug 'xolox/vim-misc'
 
-" editing
-Plug 'scrooloose/nerdcommenter'
-Plug 'tpope/vim-surround'
-Plug 'godlygeek/tabular'
-Plug 'tpope/vim-repeat'
+" Python devdelopment
+Plug 'petobens/poet-v'               " Poetry plugin
+Plug 'nvie/vim-flake8'               " Flake8 plugin
+Plug 'Vimjas/vim-python-pep8-indent' " Fixes Python indentation
+Plug 'jeetsukumaran/vim-pythonsense' " Allows better movements around Python classes
 
-" better statusline
+" Editing
+Plug 'tpope/vim-commentary' " Comment macros
+Plug 'tpope/vim-surround'   " Macros to surround selection with brackets &c
+Plug 'tpope/vim-repeat'     " Fixes repeat action
+Plug 'godlygeek/tabular'    " Allows auto-lining up of lines, e.g. =,:,table &c
+
+" better statusline w/ themes
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " git management plugin
-Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'      " Best git plugin
+Plug 'airblade/vim-gitgutter'  " Adds symbols in the gutter for changed lines
 
+" NERDTree
 Plug 'scrooloose/nerdtree'
 
 call plug#end()
 " }}} vim-plug
+
+" General {{{
+set encoding=UTF-8
+" }}} General
 
 " Colours {{{
 " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -53,7 +68,6 @@ if (has("termguicolors"))
 endif
 
 syntax enable " enable syntax processing
-" colorscheme tender
 colorscheme dracula
 set background=dark
 " }}} Colours
@@ -78,11 +92,11 @@ set showmatch      " highlight matching [{()}]
 " }}} UI tweaks
 
 " Search {{{
-set incsearch                             " search as characters are entered
-set hlsearch                              " highlight searches
-set ignorecase                            " ignore case when searching
-set smartcase                             " ignore case if search pattern is lower case
-                                          " case-sensitive otherwise
+set incsearch  " search as characters are entered
+set hlsearch   " highlight searches
+set ignorecase " ignore case when searching
+set smartcase  " ignore case if search pattern is lower case
+               " case-sensitive otherwise
 " }}} Search
 
 " Folding {{{
@@ -131,13 +145,24 @@ let g:fzf_action = {
 " }}} Leader & Mappings
 
 " NERDTree {{{
+
+" Start NERDTree and put the cursor back in the other window.
+autocmd VimEnter * NERDTree | wincmd p
+
 let g:NERDTreeShowHidden = 1
-let g:NERDTreeMinimalUI=1
+" let g:NERDTreeMinimalUI=1
 let g:NERDTreeIgnore= ['\.pyc$', '__pycache__']
-let g:NERDTreeStatusLine = ''
+" let g:NERDTreeStatusLine = ''
 
 " Automatically close nvim if NERDTree is the only thing left open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
 
 nnoremap <silent> <C-b> :NERDTreeToggle<CR>
 " }}} NerdTree
@@ -195,11 +220,25 @@ let g:ycm_complete_in_strings = 1
 let g:ycm_use_ultisnips_completer = 1 " Default 1, just ensure
 let g:ycm_seed_identifiers_with_syntax = 1 " Completion for programming language's
 
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-python']
+let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
 
 " }}} Autocomplete
 
-" Flake8 {{{
+" ALE {{{
+let g:ale_linters = {'python': 'all'}
+let g:ale_fixers = {'python': ['isort', 'yapf', 'remove_trailing_lines', 'trim_whitespace']}
+
+let g:ale_lsp_suggestions = 1
+let g:ale_fix_on_save = 1
+let g:ale_go_gofmt_options = '-s'
+let g:ale_go_gometalinter_options = '— enable=gosimple — enable=staticcheck'
+let g:ale_completion_enabled = 1
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] [%severity%] %code: %%s'
+" }}} ALE
+
+" Python development {{{
 let g:flake8_show_in_gutter=1
 let g:flake8_show_in_file=1
 " }}} Flake8
@@ -215,6 +254,12 @@ function! TrimWhiteSpace()
 	%s/\s\+$//e
 endfunction
 autocmd BufWritePre * :call TrimWhiteSpace()
+
+" Add customisation for grep to use ripgrep
+if executable("rg")
+  set grepprg=rg\ --vimgrep\ --smart-case\ --hidden
+  set grepformat=%f:%l:%c:%m
+endif
 " }}} Functions
 
 " Filetypes {{{
@@ -227,13 +272,13 @@ augroup END
 " SenseTalk filetype
 autocmd BufRead,BufNewFile *.script set filetype=sensetalk
 
-au BufNewFile,BufRead *.py
-    \ | set tabstop=4
-    \ | set softtabstop=4
-    \ | set shiftwidth=4
-    \ | set textwidth=99
-    \ | set expandtab
-    \ | set autoindent
-    \ | set fileformat=unix
+" au BufNewFile,BufRead *.py
+"     \ | set tabstop=4
+"     \ | set softtabstop=4
+"     \ | set shiftwidth=4
+"     \ | set textwidth=99
+"     \ | set expandtab
+"     \ | set autoindent
+"     \ | set fileformat=unix
 " }}} Filetypes
 
