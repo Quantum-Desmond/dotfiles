@@ -81,11 +81,11 @@ source $ZSH/oh-my-zsh.sh
 # export DISPLAY=:0
 
 # Python virtualenvrapper settings
-export WORKON_HOME=~/.envs
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+# export WORKON_HOME=~/.envs
+# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 # export VIRTUALENVWRAPPER_VIRTUALENV=/usr/lib/python3/dist-packages/virtualenv
 # export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
-source $HOME/.local/bin/virtualenvwrapper.sh
+# source $HOME/.local/bin/virtualenvwrapper.sh
 
 # import dir_colors
 if [ -f ~/.dir_colors ]; then
@@ -145,8 +145,6 @@ alias l="exa -lah --git"
 
 alias zshconfig="vim ~/.zshrc"
 alias reload="source ~/.zshrc"
-alias home="cd /mnt/c/Users/KarlMcCarron/"
-alias projects="cd /mnt/c/projects/"
 
 # git aliases
 alias gits="git status"
@@ -167,15 +165,6 @@ alias pip="pip3"
 
 # emacs alias
 # alias emacs="emacs25"
-
-# use python3 instead of python
-alias hyper="cmd.exe /c hyper"
-alias remacs="~/remacs/src/remacs &"
-
-# load "pure" prompt
-fpath+=("$HOME/.zsh/pure")
-autoload -U promptinit; promptinit
-prompt pure
 
 # turn off beeping
 unsetopt beep
@@ -231,3 +220,7 @@ conda_start () {
 # fi
 # unset __conda_setup
 # <<< conda initialize <<<
+
+# Setting prompt to Starship at end of script
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
