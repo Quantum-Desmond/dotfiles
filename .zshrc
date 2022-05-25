@@ -66,7 +66,6 @@ HYPHEN_INSENSITIVE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  emacs
   git
   python
   ripgrep
@@ -113,7 +112,7 @@ bindkey "^[OB" down-line-or-beginning-search
 bindkey -M vicmd "k" up-line-or-beginning-search
 bindkey -M vicmd "j" down-line-or-beginning-search
 
-export VISUAL='vim'
+export VISUAL='nvim'
 export EDITOR=$VISUAL
 
 # Import fzf
@@ -225,3 +224,5 @@ conda_start () {
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 
+
+alias luamake=/home/karl/repos/lua-language-server/3rd/luamake/luamake
