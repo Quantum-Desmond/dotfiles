@@ -526,7 +526,7 @@ function M.setup()
 
     --Set colorscheme
     vim.o.termguicolors = true
-    vim.cmd [[colorscheme onedark]]
+    -- vim.cmd [[colorscheme onedark]]
 
     -- Set completeopt to have a better completion experience
     vim.o.completeopt = 'menuone,noselect'
@@ -572,27 +572,8 @@ function M.setup()
     },
     }
 
-    -- Enable telescope fzf native
-    require('telescope').load_extension 'fzf'
-
-    --Add leader shortcuts
-    vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers)
-    vim.keymap.set('n', '<leader>sf', function()
-    require('telescope.builtin').find_files { previewer = false }
-    end)
-    vim.keymap.set('n', '<leader>sb', require('telescope.builtin').current_buffer_fuzzy_find)
-    vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags)
-    vim.keymap.set('n', '<leader>st', require('telescope.builtin').tags)
-    vim.keymap.set('n', '<leader>sd', require('telescope.builtin').grep_string)
-    vim.keymap.set('n', '<leader>sp', require('telescope.builtin').live_grep)
-    vim.keymap.set('n', '<leader>so', function()
-    require('telescope.builtin').tags { only_current_buffer = true }
-    end)
-    vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles)
-
-    -- jk exits insert mode
-    map("i", "jk", "<ESC>")
-    map("n", ",<Space>", ":nohlsearch<CR>", { silent = true })
+    -- map("i", "jk", "<ESC>")
+    -- map("n", ",<Space>", ":nohlsearch<CR>", { silent = true })
     -- map("n", "<Leader>", ":<C-u>WhichKey ','<CR>", { silent = true })
     -- map("n", "<Leader>?", ":WhichKey ','<CR>")
     -- map("n", "<Leader>a", ":cclose<CR>")
@@ -724,72 +705,23 @@ function M.setup()
     },
     }
 
-    -- luasnip setup
-    local luasnip = require 'luasnip'
-
-    -- nvim-cmp setup
-    local cmp = require 'cmp'
-    cmp.setup {
-    snippet = {
-        expand = function(args)
-        luasnip.lsp_expand(args.body)
-        end,
-    },
-    mapping = cmp.mapping.preset.insert({
-        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<CR>'] = cmp.mapping.confirm {
-        behavior = cmp.ConfirmBehavior.Replace,
-        select = true,
-        },
-        ['<Tab>'] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-            cmp.select_next_item()
-        elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-        else
-            fallback()
-        end
-        end, { 'i', 's' }),
-        ['<S-Tab>'] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-            cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
-        else
-            fallback()
-        end
-        end, { 'i', 's' }),
-    }),
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-    },
-    }
-
     -- nvim-tree config
-    vim.cmd[[
-    nnoremap <C-n> :NvimTreeToggle<CR>
-    nnoremap <leader>r :NvimTreeRefresh<CR>
-    nnoremap <leader>n :NvimTreeFindFile<CR>
-    " More available functions:
-    " NvimTreeOpen
-    " NvimTreeClose
-    " NvimTreeFocus
-    " NvimTreeFindFileToggle
-    " NvimTreeResize
-    " NvimTreeCollapse
-    " NvimTreeCollapseKeepBuffers
+    -- vim.cmd[[
+    -- nnoremap <C-n> :NvimTreeToggle<CR>
+    -- nnoremap <leader>r :NvimTreeRefresh<CR>
+    -- nnoremap <leader>n :NvimTreeFindFile<CR>
+    -- " More available functions:
+    -- " NvimTreeOpen
+    -- " NvimTreeClose
+    -- " NvimTreeFocus
+    -- " NvimTreeFindFileToggle
+    -- " NvimTreeResize
+    -- " NvimTreeCollapse
+    -- " NvimTreeCollapseKeepBuffers
 
-    set termguicolors " this variable must be enabled for colors to be applied properly
-    ]]
+    -- set termguicolors " this variable must be enabled for colors to be applied properly
+    -- ]]
 
-    -- close NvimTree if last buffer open
-    api.nvim_create_autocmd(
-        "BufEnter",
-        {command = "if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif"}
-    )
     --
     -- open NvimTree in fresh start
     -- api.nvim_create_autocmd(
