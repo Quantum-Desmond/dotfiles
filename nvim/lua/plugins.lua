@@ -2,6 +2,7 @@
 local M = {}
 
 function M.setup()
+    
     local api = vim.api
 
     -- Indicate first time installation
@@ -10,14 +11,14 @@ function M.setup()
     -- packer.nvim configuration
     local conf = {
         profile = {
-        enable = true,
-        threshold = 0, -- the amount in ms that a plugins load time must be over for it to be included in the profile
+            enable = true,
+            threshold = 0, -- the amount in ms that a plugins load time must be over for it to be included in the profile
         },
 
         display = {
-        open_fn = function()
-            return require("packer.util").float { border = "rounded" }
-        end,
+            open_fn = function()
+                return require("packer.util").float { border = "rounded" }
+            end,
         },
     }
 
@@ -443,7 +444,7 @@ function M.setup()
             end,
         }
 
-    -- Auto tag
+        -- Auto tag
         use {
             "windwp/nvim-ts-autotag",
             wants = "nvim-treesitter",
@@ -460,8 +461,202 @@ function M.setup()
             event = "InsertEnter",
             disable = false,
         }
-  
 
+        -- LSP
+        if PLUGINS.nvim_cmp.enabled then
+            use {
+                "neovim/nvim-lspconfig",
+                opt = true,
+                -- event = "VimEnter",
+                event = { "BufReadPre" },
+                -- keys = { "<leader>l", "<leader>f" },
+                -- wants = { "nvim-lsp-installer", "lsp_signature.nvim", "cmp-nvim-lsp" },
+                wants = {
+                    "nvim-lsp-installer",
+                    "cmp-nvim-lsp",
+                    "lua-dev.nvim",
+                    "vim-illuminate",
+                    "null-ls.nvim",
+                    "schemastore.nvim",
+                    -- "nvim-lsp-ts-utils",
+                    "typescript.nvim",
+                },
+                config = function()
+                    require("config.lsp").setup()
+                end,
+                requires = {
+                    "williamboman/nvim-lsp-installer",
+                    "folke/lua-dev.nvim",
+                    "RRethy/vim-illuminate",
+                    "jose-elias-alvarez/null-ls.nvim",
+                    {
+                        "j-hui/fidget.nvim",
+                        config = function()
+                            require("fidget").setup {}
+                        end,
+                    },
+                    "b0o/schemastore.nvim",
+                    -- "jose-elias-alvarez/nvim-lsp-ts-utils",
+                    "jose-elias-alvarez/typescript.nvim",
+                    -- "ray-x/lsp_signature.nvim",
+                },
+            }
+        end
+
+        if PLUGINS.coq.enabled then
+            use {
+                "neovim/nvim-lspconfig",
+                opt = true,
+                -- event = "VimEnter",
+                event = { "BufReadPre" },
+                wants = {
+                    "nvim-lsp-installer",
+                    "lsp_signature.nvim",
+                    "coq_nvim",
+                    "lua-dev.nvim",
+                    "vim-illuminate",
+                    "null-ls.nvim",
+                    "schemastore.nvim",
+                    -- "nvim-lsp-ts-utils",
+                    "typescript.nvim",
+                }, -- for coq.nvim
+                config = function()
+                    require("config.lsp").setup()
+                end,
+                requires = {
+                    "williamboman/nvim-lsp-installer",
+                    "ray-x/lsp_signature.nvim",
+                    "folke/lua-dev.nvim",
+                    "RRethy/vim-illuminate",
+                    "jose-elias-alvarez/null-ls.nvim",
+                    {
+                        "j-hui/fidget.nvim",
+                        config = function()
+                            require("fidget").setup {}
+                        end,
+                    },
+                    "b0o/schemastore.nvim",
+                    -- "jose-elias-alvarez/nvim-lsp-ts-utils",
+                    "jose-elias-alvarez/typescript.nvim",
+                },
+            }
+        end
+  
+        -- trouble.nvim
+        use {
+            "folke/trouble.nvim",
+            wants = "nvim-web-devicons",
+            cmd = { "TroubleToggle", "Trouble" },
+            config = function()
+                require("trouble").setup {
+                    use_diagnostic_signs = true,
+                }
+            end,
+        }
+
+        -- lspsaga.nvim
+        use {
+            "tami5/lspsaga.nvim",
+            cmd = { "Lspsaga" },
+            config = function()
+                require("lspsaga").setup {}
+            end,
+        }
+
+        -- renamer.nvim
+        use {
+            "filipdutescu/renamer.nvim",
+            module = { "renamer" },
+            config = function()
+                require("renamer").setup {}
+            end,
+        }
+
+        -- Rust
+        use {
+            "simrat39/rust-tools.nvim",
+            requires = { "nvim-lua/plenary.nvim", "rust-lang/rust.vim" },
+            opt = true,
+            module = "rust-tools",
+            ft = { "rust" },
+            config = function()
+                require("config.rust").setup()
+            end,
+        }
+        use {
+            "saecki/crates.nvim",
+            event = { "BufRead Cargo.toml" },
+            requires = { { "nvim-lua/plenary.nvim" } },
+            config = function()
+                -- local null_ls = require "null-ls"
+                require("crates").setup {
+                    null_ls = {
+                        enabled = true,
+                        name = "crates.nvim",
+                    },
+                }
+            end,
+        }
+
+        -- Debugging
+        use {
+            "mfussenegger/nvim-dap",
+            opt = true,
+            -- event = "BufReadPre",
+            keys = { [[<leader>d]] },
+            module = { "dap" },
+            wants = { "nvim-dap-virtual-text", "DAPInstall.nvim", "nvim-dap-ui", "nvim-dap-python", "which-key.nvim" },
+            requires = {
+                "alpha2phi/DAPInstall.nvim",
+                -- { "Pocco81/dap-buddy.nvim", branch = "dev" },
+                "theHamsta/nvim-dap-virtual-text",
+                "rcarriga/nvim-dap-ui",
+                "mfussenegger/nvim-dap-python",
+                "nvim-telescope/telescope-dap.nvim",
+                { "leoluz/nvim-dap-go", module = "dap-go" },
+                { "jbyuki/one-small-step-for-vimkind", module = "osv" },
+            },
+            config = function()
+                require("config.dap").setup()
+            end,
+            disable = not PLUGINS.nvim_dap,
+        }
+
+        -- vimspector
+        use {
+            "puremourning/vimspector",
+            cmd = { "VimspectorInstall", "VimspectorUpdate" },
+            fn = { "vimspector#Launch()", "vimspector#ToggleBreakpoint", "vimspector#Continue" },
+            config = function()
+                require("config.vimspector").setup()
+            end,
+        }
+
+        -- Test
+        use {
+            "rcarriga/vim-ultest",
+            requires = { "vim-test/vim-test" },
+            opt = true,
+            keys = { "<leader>t" },
+            cmd = {
+                "TestNearest",
+                "TestFile",
+                "TestSuite",
+                "TestLast",
+                "TestVisit",
+                "Ultest",
+                "UltestNearest",
+                "UltestDebug",
+                "UltestLast",
+                "UltestSummary",
+            },
+            module = "ultest",
+            run = ":UpdateRemotePlugins",
+            config = function()
+                require("config.test").setup()
+            end,
+        }
+  
         -- git setup in nvim
         use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
         
@@ -531,16 +726,6 @@ function M.setup()
     -- Set completeopt to have a better completion experience
     vim.o.completeopt = 'menuone,noselect'
 
-    --Set statusbar
-    require('lualine').setup {
-    options = {
-        icons_enabled = false,
-        theme = 'onedark',
-        component_separators = '|',
-        section_separators = '',
-    },
-    }
-
     --Remap space as leader key
     vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
     vim.g.mapleader = ' '
@@ -553,24 +738,12 @@ function M.setup()
     -- Highlight on yank
     local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
     api.nvim_create_autocmd('TextYankPost', {
-    callback = function()
-        vim.highlight.on_yank()
-    end,
-    group = highlight_group,
-    pattern = '*',
+        callback = function()
+            vim.highlight.on_yank()
+        end,
+        group = highlight_group,
+        pattern = '*',
     })
-
-    -- Telescope
-    require('telescope').setup {
-    defaults = {
-        mappings = {
-        i = {
-            ['<C-u>'] = false,
-            ['<C-d>'] = false,
-        },
-        },
-    },
-    }
 
     -- map("i", "jk", "<ESC>")
     -- map("n", ",<Space>", ":nohlsearch<CR>", { silent = true })
@@ -581,54 +754,54 @@ function M.setup()
     -- Treesitter configuration
     -- Parsers must be installed manually via :TSInstall
     require('nvim-treesitter.configs').setup {
-    highlight = {
-        enable = true, -- false will disable the whole extension
-    },
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-        init_selection = 'gnn',
-        node_incremental = 'grn',
-        scope_incremental = 'grc',
-        node_decremental = 'grm',
+        highlight = {
+            enable = true, -- false will disable the whole extension
         },
-    },
-    indent = {
-        enable = true,
-    },
-    textobjects = {
-        select = {
-        enable = true,
-        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-        keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
-            ['af'] = '@function.outer',
-            ['if'] = '@function.inner',
-            ['ac'] = '@class.outer',
-            ['ic'] = '@class.inner',
+        incremental_selection = {
+            enable = true,
+            keymaps = {
+                init_selection = 'gnn',
+                node_incremental = 'grn',
+                scope_incremental = 'grc',
+                node_decremental = 'grm',
+            },
         },
+        indent = {
+            enable = true,
         },
-        move = {
-        enable = true,
-        set_jumps = true, -- whether to set jumps in the jumplist
-        goto_next_start = {
-            [']m'] = '@function.outer',
-            [']]'] = '@class.outer',
+        textobjects = {
+            select = {
+            enable = true,
+            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+            keymaps = {
+                -- You can use the capture groups defined in textobjects.scm
+                ['af'] = '@function.outer',
+                ['if'] = '@function.inner',
+                ['ac'] = '@class.outer',
+                ['ic'] = '@class.inner',
+            },
+            },
+            move = {
+            enable = true,
+            set_jumps = true, -- whether to set jumps in the jumplist
+            goto_next_start = {
+                [']m'] = '@function.outer',
+                [']]'] = '@class.outer',
+            },
+            goto_next_end = {
+                [']M'] = '@function.outer',
+                [']['] = '@class.outer',
+            },
+            goto_previous_start = {
+                ['[m'] = '@function.outer',
+                ['[['] = '@class.outer',
+            },
+            goto_previous_end = {
+                ['[M'] = '@function.outer',
+                ['[]'] = '@class.outer',
+            },
+            },
         },
-        goto_next_end = {
-            [']M'] = '@function.outer',
-            [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-            ['[m'] = '@function.outer',
-            ['[['] = '@class.outer',
-        },
-        goto_previous_end = {
-            ['[M'] = '@function.outer',
-            ['[]'] = '@class.outer',
-        },
-        },
-    },
     }
 
     -- Diagnostic keymaps
@@ -778,3 +951,5 @@ function M.setup()
     -- },
     -- }, { prefix = "<leader>" })
 end
+
+return M
