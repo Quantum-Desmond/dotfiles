@@ -657,19 +657,6 @@ function M.setup()
             end,
         }
   
-        -- git setup in nvim
-        use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
-        
-        -- Automatic tags management
-        use 'ludovicchabant/vim-gutentags'
-
-        -- Additional textobjects for treesitter
-        use 'nvim-treesitter/nvim-treesitter-textobjects'
-
-        -- LSP {{{
-        use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
-        -- }}} LSP
-
         use 'L3MON4D3/LuaSnip' -- Snippets plugin
         -- }}} Packages
     end
@@ -753,56 +740,56 @@ function M.setup()
 
     -- Treesitter configuration
     -- Parsers must be installed manually via :TSInstall
-    require('nvim-treesitter.configs').setup {
-        highlight = {
-            enable = true, -- false will disable the whole extension
-        },
-        incremental_selection = {
-            enable = true,
-            keymaps = {
-                init_selection = 'gnn',
-                node_incremental = 'grn',
-                scope_incremental = 'grc',
-                node_decremental = 'grm',
-            },
-        },
-        indent = {
-            enable = true,
-        },
-        textobjects = {
-            select = {
-            enable = true,
-            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-            keymaps = {
-                -- You can use the capture groups defined in textobjects.scm
-                ['af'] = '@function.outer',
-                ['if'] = '@function.inner',
-                ['ac'] = '@class.outer',
-                ['ic'] = '@class.inner',
-            },
-            },
-            move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-                [']m'] = '@function.outer',
-                [']]'] = '@class.outer',
-            },
-            goto_next_end = {
-                [']M'] = '@function.outer',
-                [']['] = '@class.outer',
-            },
-            goto_previous_start = {
-                ['[m'] = '@function.outer',
-                ['[['] = '@class.outer',
-            },
-            goto_previous_end = {
-                ['[M'] = '@function.outer',
-                ['[]'] = '@class.outer',
-            },
-            },
-        },
-    }
+    -- require('nvim-treesitter.configs').setup {
+    --     highlight = {
+    --         enable = true, -- false will disable the whole extension
+    --     },
+    --     incremental_selection = {
+    --         enable = true,
+    --         keymaps = {
+    --             init_selection = 'gnn',
+    --             node_incremental = 'grn',
+    --             scope_incremental = 'grc',
+    --             node_decremental = 'grm',
+    --         },
+    --     },
+    --     indent = {
+    --         enable = true,
+    --     },
+    --     textobjects = {
+    --         select = {
+    --         enable = true,
+    --         lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
+    --         keymaps = {
+    --             -- You can use the capture groups defined in textobjects.scm
+    --             ['af'] = '@function.outer',
+    --             ['if'] = '@function.inner',
+    --             ['ac'] = '@class.outer',
+    --             ['ic'] = '@class.inner',
+    --         },
+    --         },
+    --         move = {
+    --         enable = true,
+    --         set_jumps = true, -- whether to set jumps in the jumplist
+    --         goto_next_start = {
+    --             [']m'] = '@function.outer',
+    --             [']]'] = '@class.outer',
+    --         },
+    --         goto_next_end = {
+    --             [']M'] = '@function.outer',
+    --             [']['] = '@class.outer',
+    --         },
+    --         goto_previous_start = {
+    --             ['[m'] = '@function.outer',
+    --             ['[['] = '@class.outer',
+    --         },
+    --         goto_previous_end = {
+    --             ['[M'] = '@function.outer',
+    --             ['[]'] = '@class.outer',
+    --         },
+    --         },
+    --     },
+    -- }
 
     -- Diagnostic keymaps
     vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
@@ -811,72 +798,72 @@ function M.setup()
     vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
     -- LSP settings
-    local lspconfig = require 'lspconfig'
-    local on_attach = function(_, bufnr)
-    local opts = { buffer = bufnr }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-    vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
-    vim.keymap.set('n', '<leader>wl', function()
-        vim.inspect(vim.lsp.buf.list_workspace_folders())
-    end, opts)
-    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
-    api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
-    end
+    -- local lspconfig = require 'lspconfig'
+    -- local on_attach = function(_, bufnr)
+    --     local opts = { buffer = bufnr }
+    --     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    --     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    --     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    --     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    --     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    --     vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
+    --     vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    --     vim.keymap.set('n', '<leader>wl', function()
+    --         vim.inspect(vim.lsp.buf.list_workspace_folders())
+    --     end, opts)
+    --     vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
+    --     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    --     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    --     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+    --     vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
+    --     api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
+    -- end
 
     -- nvim-cmp supports additional completion capabilities
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+    -- local capabilities = vim.lsp.protocol.make_client_capabilities()
+    -- capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
     -- Enable the following language servers
-    local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
-    for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-    }
-    end
+    -- local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
+    -- for _, lsp in ipairs(servers) do
+    -- lspconfig[lsp].setup {
+    --     on_attach = on_attach,
+    --     capabilities = capabilities,
+    -- }
+    -- end
 
     -- Example custom server
     -- Make runtime files discoverable to the server
-    local runtime_path = vim.split(package.path, ';')
-    table.insert(runtime_path, 'lua/?.lua')
-    table.insert(runtime_path, 'lua/?/init.lua')
+    -- local runtime_path = vim.split(package.path, ';')
+    -- table.insert(runtime_path, 'lua/?.lua')
+    -- table.insert(runtime_path, 'lua/?/init.lua')
 
-    lspconfig.sumneko_lua.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-    settings = {
-        Lua = {
-        runtime = {
-            -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-            version = 'LuaJIT',
-            -- Setup your lua path
-            path = runtime_path,
-        },
-        diagnostics = {
-            -- Get the language server to recognize the `vim` global
-            globals = { 'vim' },
-        },
-        workspace = {
-            -- Make the server aware of Neovim runtime files
-            library = vim.api.nvim_get_runtime_file('', true),
-        },
-        -- Do not send telemetry data containing a randomized but unique identifier
-        telemetry = {
-            enable = false,
-        },
-        },
-    },
-    }
+    -- lspconfig.sumneko_lua.setup {
+    -- on_attach = on_attach,
+    -- capabilities = capabilities,
+    -- settings = {
+    --     Lua = {
+    --     runtime = {
+    --         -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+    --         version = 'LuaJIT',
+    --         -- Setup your lua path
+    --         path = runtime_path,
+    --     },
+    --     diagnostics = {
+    --         -- Get the language server to recognize the `vim` global
+    --         globals = { 'vim' },
+    --     },
+    --     workspace = {
+    --         -- Make the server aware of Neovim runtime files
+    --         library = vim.api.nvim_get_runtime_file('', true),
+    --     },
+    --     -- Do not send telemetry data containing a randomized but unique identifier
+    --     telemetry = {
+    --         enable = false,
+    --     },
+    --     },
+    -- },
+    -- }
 
     -- nvim-tree config
     -- vim.cmd[[
