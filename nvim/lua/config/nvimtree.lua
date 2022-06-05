@@ -21,6 +21,11 @@ function M.setup()
 
   -- close NvimTree if last buffer open
   vim.api.nvim_create_autocmd(
+    "VimEnter",
+    {command = "NvimTreeOpen | wincmd p"}
+  )
+  -- close NvimTree if last buffer open
+  vim.api.nvim_create_autocmd(
     "BufEnter",
     {command = "if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif"}
   )

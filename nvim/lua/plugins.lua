@@ -2,7 +2,6 @@
 local M = {}
 
 function M.setup()
-    
     local api = vim.api
 
     -- Indicate first time installation
@@ -194,6 +193,14 @@ function M.setup()
 
         -- Buffer
         use { "kazhala/close-buffers.nvim", cmd = { "BDelete", "BWipeout" } }
+        use {
+            "matbme/JABS.nvim",
+            cmd = "JABSOpen",
+            config = function()
+                require("config.jabs").setup()
+            end,
+            disable = false,
+        }
 
         -- IDE {{{
         use {
@@ -658,9 +665,70 @@ function M.setup()
                 require("config.test").setup()
             end,
         }
-  
-        use 'L3MON4D3/LuaSnip' -- Snippets plugin
         -- }}} Packages
+
+        -- Legendary
+        use {
+            "mrjones2014/legendary.nvim",
+            opt = true,
+            keys = { [[<C-p>]] },
+            wants = { "dressing.nvim" },
+            config = function()
+                require("config.legendary").setup()
+            end,
+            requires = { "stevearc/dressing.nvim" },
+        }
+
+        -- Web
+        use {
+            "vuki656/package-info.nvim",
+            opt = true,
+            requires = {
+                "MunifTanjim/nui.nvim",
+            },
+            wants = { "nui.nvim" },
+            module = { "package-info" },
+            ft = { "json" },
+            config = function()
+                require("config.package").setup()
+            end,
+            disable = false,
+        }
+        use {
+            "meain/vim-package-info",
+            ft = { "json" },
+            run = "npm install",
+            disable = true,
+        }
+
+        -- Practice
+        use {
+            "antonk52/bad-practices.nvim",
+            event = "BufReadPre",
+            config = function()
+                require("bad_practices").setup()
+            end,
+            disable = false,
+        }
+
+        -- Session
+        use {
+            "rmagatti/auto-session",
+            opt = true,
+            cmd = { "SaveSession", "RestoreSession" },
+            requires = { "rmagatti/session-lens" },
+            wants = { "telescope.nvim", "session-lens" },
+            config = function()
+                require("bad_practices").setup()
+            end,
+            disable = false,
+        }
+
+        -- Bootstrap Neovim
+        if packer_bootstrap then
+            print "Restart Neovim required after installation!"
+            require("packer").sync()
+        end
     end
 
     -- Init and start packer
@@ -701,6 +769,7 @@ function M.setup()
     vim.opt.undofile = true
 
     --Case insensitive searching UNLESS /C or capital in search
+    vim.o.tabstop = 4
     vim.o.ignorecase = true
     vim.o.smartcase = true
 
