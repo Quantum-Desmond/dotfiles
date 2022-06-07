@@ -68,6 +68,7 @@ HYPHEN_INSENSITIVE="true"
 plugins=(
   git
   python
+  poetry
   ripgrep
   shrink-path
   zsh-interactive-cd

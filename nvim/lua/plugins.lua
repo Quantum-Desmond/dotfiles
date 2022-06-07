@@ -235,11 +235,14 @@ function M.setup()
         use {
             "danymat/neogen",
             config = function()
-                require("neogen").setup {}
+                require("config.neogen").setup()
             end,
             cmd = { "Neogen" },
+            module = "neogen",
+            disable = false,
         }
 
+        
         use {
             "phaazon/hop.nvim",
             cmd = { "HopWord", "HopChar1" },
@@ -667,6 +670,19 @@ function M.setup()
         }
         -- }}} Packages
 
+        -- Harpoon
+        use {
+            "ThePrimeagen/harpoon",
+            opt = true,
+            keys = { [[<leader>j]] },
+            module = { "harpoon", "harpoon.cmd-ui", "harpoon.mark", "harpoon.ui", "harpoon.term" },
+            wants = { "telescope.nvim" },
+            run = ":UpdateRemotePlugins",
+            config = function()
+                require("config.harpoon").setup()
+            end,
+        }
+
         -- Legendary
         use {
             "mrjones2014/legendary.nvim",
@@ -701,16 +717,6 @@ function M.setup()
             disable = true,
         }
 
-        -- Practice
-        use {
-            "antonk52/bad-practices.nvim",
-            event = "BufReadPre",
-            config = function()
-                require("bad_practices").setup()
-            end,
-            disable = false,
-        }
-
         -- Session
         use {
             "rmagatti/auto-session",
@@ -719,9 +725,8 @@ function M.setup()
             requires = { "rmagatti/session-lens" },
             wants = { "telescope.nvim", "session-lens" },
             config = function()
-                require("bad_practices").setup()
             end,
-            disable = false,
+            disable = true,
         }
 
         -- Bootstrap Neovim
@@ -769,7 +774,7 @@ function M.setup()
     vim.opt.undofile = true
 
     --Case insensitive searching UNLESS /C or capital in search
-    vim.o.tabstop = 4
+    vim.cmd [[set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab]]
     vim.o.ignorecase = true
     vim.o.smartcase = true
 
