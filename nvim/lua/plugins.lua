@@ -775,6 +775,7 @@ function M.setup()
 
     --Case insensitive searching UNLESS /C or capital in search
     vim.cmd [[set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab]]
+    vim.cmd [[set smartindent]]
     vim.o.ignorecase = true
     vim.o.smartcase = true
 
